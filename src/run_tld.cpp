@@ -167,6 +167,7 @@ GETBOUNDINGBOX:
   bool status=true;
   int frames = 1;
   int detections = 1;
+  VideoWriter record("RobotVideo.avi", CV_FOURCC('D','I','V','X'), 10, frame.size(), true);
 REPEAT:
   while(capture.read(frame)){
     //get frame
@@ -175,11 +176,12 @@ REPEAT:
     tld.processFrame(last_gray,current_gray,pts1,pts2,pbox,status,tl,bb_file);
     //Draw Points
     if (status){
-      drawPoints(frame,pts1);
-      drawPoints(frame,pts2,Scalar(0,255,0));
+      //drawPoints(frame,pts1);
+      //drawPoints(frame,pts2,Scalar(0,255,0));
       drawBox(frame,pbox);
       detections++;
     }
+    record << frame;
     //Display
     imshow("TLD", frame);
     //swap points and images
