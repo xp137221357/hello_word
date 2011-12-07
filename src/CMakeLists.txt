@@ -27,4 +27,12 @@ add_executable(run_tld run_tld.cpp)
 target_link_libraries(run_tld tld LKTracker ferNN tld_utils ${OpenCV_LIBS})
 #set optimization level 
 set(CMAKE_BUILD_TYPE Release)
+#-------------------------------OpenMP flags---------------------------------------
+if(UNIX)
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
+endif(UNIX)
+
+if(WINDOWS)
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /openmp")
+endif(WINDOWS)
 

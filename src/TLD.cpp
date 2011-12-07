@@ -426,6 +426,7 @@ void TLD::detect(const cv::Mat& frame){
   float conf;
   int a=0;
   Mat patch;
+  #pragma omp parallel for
   for (int i=0;i<grid.size();i++){//FIXME: BottleNeck
       if (getVar(grid[i],iisum,iisqsum)>=var){
           a++;
