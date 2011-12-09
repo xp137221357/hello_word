@@ -168,20 +168,29 @@ GETBOUNDINGBOX:
   int frames = 1;
   int detections = 1;
   VideoWriter record("RobotVideo.avi", CV_FOURCC('D','I','V','X'), 10, frame.size(), true);
+  cvNamedWindow("BBOX",CV_WINDOW_AUTOSIZE);
+  Mat subimg;
+  float subscalex;
+  Point2f pbox_centre;
 REPEAT:
   while(capture.read(frame)){
     //get frame
     cvtColor(frame, current_gray, CV_RGB2GRAY);
     //Process Frame
     tld.processFrame(last_gray,current_gray,pts1,pts2,pbox,status,tl,bb_file);
-    //Draw Points
+    //If last box is found:
     if (status){
       //drawPoints(frame,pts1);
       //drawPoints(frame,pts2,Scalar(0,255,0));
+  	  pbox_centre.x = pbox.x + pbox.width/2;
+	  pbox_centre.y = pbox.y + pbox.height/2;
       drawBox(frame,pbox);
+      getRectSubPix( frame, cvSize(pbox.width, pbox.height), pbox_centre, subimg );
+      resize(subimg, subimg, cvSize(100,100));
+      imshow("BBOX",subimg);
       detections++;
     }
-    record << frame;
+    record << subimg;
     //Display
     imshow("TLD", frame);
     //swap points and images
