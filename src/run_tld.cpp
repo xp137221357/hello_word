@@ -122,6 +122,11 @@ int main(int argc, char * argv[]){
   Mat frame;
   Mat last_gray;
   Mat first;
+  //haar cascade
+  CascadeClassifier cascade;
+  String cascadeName = "haarcascade_frontalface_default.xml";
+  cascade.load( cascadeName );
+  vector<Rect> faces;
   if (fromfile){
       capture >> frame;
       cvtColor(frame, last_gray, CV_RGB2GRAY);
@@ -141,7 +146,18 @@ GETBOUNDINGBOX:
     else
       first.copyTo(frame);
     cvtColor(frame, last_gray, CV_RGB2GRAY);
-    drawBox(frame,box);
+    //drawBox(frame,box);
+    cascade.detectMultiScale( last_gray, faces,
+        1.1, 2, 0
+        |CV_HAAR_FIND_BIGGEST_OBJECT
+        //|CV_HAAR_DO_ROUGH_SEARCH
+        //|CV_HAAR_SCALE_IMAGE
+        , Size(30, 30) );
+    if (faces.size() > 0)
+    {
+        box = faces[0];
+        gotBB = true;
+    }
     imshow("TLD", frame);
     if (cvWaitKey(33) == 'q')
 	    return 0;
