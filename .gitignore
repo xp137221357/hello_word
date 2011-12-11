@@ -1,3 +1,4 @@
+!*
 .project
 
 # mex files on different platforms.
@@ -37,7 +38,6 @@ CVS/
 .svn/
 
 .frag
-.xml
 
 # general generated data
 *.a
@@ -87,4 +87,4 @@ ehthumbs.db
 Icon?
 Thumbs.db
 
-datasets/
+
