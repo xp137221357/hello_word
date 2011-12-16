@@ -14,6 +14,9 @@ bool tl = true;
 bool rep = false;
 bool fromfile=false;
 string video;
+bool recordvid = false;
+VideoWriter record;
+string outputvid;
 
 void readBB(char* file){
   ifstream bb_file (file);
@@ -87,6 +90,14 @@ void read_options(int argc, char** argv,VideoCapture& capture,FileStorage &fs){
       if (strcmp(argv[i],"-p")==0){
           if (argc>i){
               fs.open(argv[i+1], FileStorage::READ);
+          }
+          else
+            print_help(argv);
+      }
+      if (strcmp(argv[i],"-o")==0){
+          if (argc>i){
+              outputvid = argv[i+1];
+              recordvid = true;
           }
           else
             print_help(argv);
@@ -167,11 +178,10 @@ GETBOUNDINGBOX:
   bool status=true;
   int frames = 1;
   int detections = 1;
-  VideoWriter record("RobotVideo.avi", CV_FOURCC('D','I','V','X'), 10, frame.size(), true);
-  cvNamedWindow("BBOX",CV_WINDOW_AUTOSIZE);
-  Mat subimg;
-  float subscalex;
-  Point2f pbox_centre;
+  double fps = capture.get(CV_CAP_PROP_FPS);
+  if (recordvid) {
+	record.open(outputvid, CV_FOURCC('D','I','V','X'), fps, frame.size(), true);
+  }
 REPEAT:
   while(capture.read(frame)){
     //get frame
@@ -180,17 +190,14 @@ REPEAT:
     tld.processFrame(last_gray,current_gray,pts1,pts2,pbox,status,tl,bb_file);
     //If last box is found:
     if (status){
-      //drawPoints(frame,pts1);
-      //drawPoints(frame,pts2,Scalar(0,255,0));
-  	  pbox_centre.x = pbox.x + pbox.width/2;
-	  pbox_centre.y = pbox.y + pbox.height/2;
+      drawPoints(frame,pts1);
+      drawPoints(frame,pts2,Scalar(0,255,0));
       drawBox(frame,pbox);
-      getRectSubPix( frame, cvSize(pbox.width, pbox.height), pbox_centre, subimg );
-      resize(subimg, subimg, cvSize(100,100));
-      imshow("BBOX",subimg);
       detections++;
     }
-    record << subimg;
+    if (recordvid) {
+		record << frame;
+	}
     //Display
     imshow("TLD", frame);
     //swap points and images
