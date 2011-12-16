@@ -181,6 +181,10 @@ GETBOUNDINGBOX:
   double fps = capture.get(CV_CAP_PROP_FPS);
   if (recordvid) {
 	record.open(outputvid, CV_FOURCC('D','I','V','X'), fps, frame.size(), true);
+	if (!record.isOpened()) {
+		fprintf(stderr, "failed to open output file!\n");
+		return -1;
+	}
   }
 REPEAT:
   while(capture.read(frame)){
