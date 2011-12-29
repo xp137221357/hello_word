@@ -67,8 +67,6 @@ bool LKTracker::filterPts(vector<Point2f>& points1,vector<Point2f>& points2){
 
   fbmed = median(FB_error);
   for( i=k = 0; i<points2.size(); ++i ){
-      if( !status[i])
-        continue;
       if(FB_error[i] <= fbmed){
         points1[k] = points1[i];
         points2[k] = points2[i];
