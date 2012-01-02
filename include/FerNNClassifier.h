@@ -42,7 +42,7 @@ public:
           : x1((uchar)_x1), y1((uchar)_y1), x2((uchar)_x2), y2((uchar)_y2)
           {}
           bool operator ()(const cv::Mat& patch) const
-          { return patch.at<uchar>(y1,x1) > patch.at<uchar>(y2, x2); }
+          { return patch.at<uchar>(y1,x1) > patch.at<uchar>(y2, x2); } //currently using pixel features.
       };
   std::vector<std::vector<Feature> > features; //Ferns features (one std::vector for each scale)
   std::vector< std::vector<int> > nCounter; //negative counter
